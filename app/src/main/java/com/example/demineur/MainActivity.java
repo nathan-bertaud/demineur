@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        System.out.println("starting service");
         startService(intentService);
     }
 
@@ -36,6 +36,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         registerReceiver(receiver, new IntentFilter(BROADCAST));
+        binding.imageView2.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                //TODO casser une case
+            }
+        });
+
+        binding.imageView3.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                //TODO Mettre un drapeau sur la case
+            }
+        });
     }
 
     @Override
@@ -53,10 +66,8 @@ public class MainActivity extends AppCompatActivity {
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            System.out.println("received");
             Bundle bundle = intent.getExtras();
             if(bundle != null){
-                System.out.println("Timer value : " + String.valueOf(bundle.getInt("timer")));
                 binding.timerTextview.setText(String.valueOf(bundle.getInt("timer")));
             }
         }
