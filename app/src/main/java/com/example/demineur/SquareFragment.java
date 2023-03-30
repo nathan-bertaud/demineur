@@ -61,6 +61,18 @@ public class SquareFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        binding.imageViewSquare.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                System.out.println(nBombNeighbor);
+                isClicked();
+            }
+        });
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -68,6 +80,8 @@ public class SquareFragment extends Fragment {
         updateAppearance();
         return binding.getRoot();
     }
+
+
 
     public void updateAppearance(){
         binding.imageViewSquare.setImageResource(skin[mState]);
