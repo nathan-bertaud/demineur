@@ -26,6 +26,12 @@ public class Options extends AppCompatActivity {
         this.prenom = p.getPrenom();
         this.nom = p.getNom();
         this.difficulte = p.getDifficulte();
+        if(!this.nom.equals("1")) {
+            binding.editTextTextPersonName.setText(this.nom);
+        }
+        if(!this.prenom.equals("joueur")) {
+            binding.editTextTextPersonName2.setText(this.prenom);
+        }
         binding.radioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
             if(this.binding.radioButton.isChecked() ){
                 this.difficulte = Difficulte.FACILE;
@@ -39,10 +45,10 @@ public class Options extends AppCompatActivity {
         });
         binding.button2.setOnClickListener(view ->{
             Intent intent = new Intent(Options.this,MainActivity.class);
-            if(this.binding.editTextTextPersonName.getText().equals("")){
+            if(!this.binding.editTextTextPersonName.getText().toString().equals("")){
                 this.nom = this.binding.editTextTextPersonName.getText().toString();
             }
-            if(this.binding.editTextTextPersonName2.getText().equals("")){
+            if(!this.binding.editTextTextPersonName2.getText().toString().equals("")){
                 this.prenom = this.binding.editTextTextPersonName2.getText().toString();
             }
             Profil profil =  new Profil(this.nom,this.prenom, this.difficulte,0);
