@@ -9,7 +9,7 @@ public class Profil implements Serializable {
     private  int score;
     private Difficulte difficulte;
 
-    Profil(String nom, String lastName,Difficulte difficulte,int score) {
+    Profil(String nom, String prenom,Difficulte difficulte,int score) {
         this.nom = nom;
         this.prenom = prenom;
         this.difficulte = difficulte;
