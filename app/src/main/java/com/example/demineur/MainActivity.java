@@ -11,6 +11,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private ActivityMainBinding binding;
+
+    private Difficulte difficulte = Difficulte.FACILE;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,4 +28,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        Profil p = (Profil) bundle.getSerializable("PROFIL");
+        this.difficulte = p.getDifficulte();
+    }
+
 }
