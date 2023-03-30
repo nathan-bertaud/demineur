@@ -23,8 +23,8 @@ public class SquareFragment extends Fragment {
     private FragmentSquareBinding binding;
     // TODO: Rename and change types of parameters
     private int mState;
-    private int skin[]=new int[10];
-
+    private int nBombNeighbor;
+    private static int skin[]=new int[12];
     public SquareFragment() {
         // Required empty public constructor
     }
@@ -36,6 +36,19 @@ public class SquareFragment extends Fragment {
         Bundle args = new Bundle();
         args.putInt(ARG_PARAM1, state);
         fragment.setArguments(args);
+
+        skin[0]=R.drawable.case_vide;
+        skin[1]=R.drawable.numero_1;
+        skin[2]=R.drawable.numero_2;
+        skin[3]=R.drawable.numero_3;
+        skin[4]=R.drawable.numero_4;
+        skin[5]=R.drawable.numero_5;
+        skin[6]=R.drawable.numero_6;
+        skin[7]=R.drawable.numero_7;
+        skin[8]=R.drawable.numero_8;
+        skin[9]=R.drawable.numero_9;
+        skin[10]=R.drawable.drapeau;
+        skin[11]=R.drawable.pixil_frame_0;
         return fragment;
     }
 
@@ -52,12 +65,34 @@ public class SquareFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentSquareBinding.inflate(inflater, container, false);
+        updateAppearance();
         return binding.getRoot();
     }
 
     public void updateAppearance(){
-
+        binding.imageViewSquare.setImageResource(skin[mState]);
     }
 
+    public boolean isBomb(){
+        if (mState==11){
+            return true;
+        }
+        return false;
+    }
+
+    public void isClicked(){
+        if (mState==0){
+            this.setState(nBombNeighbor);
+            updateAppearance();
+        }
+    }
+
+    protected void setState(int state){
+        mState=state;
+    }
+
+    protected void setnBombNeighbor(int nBomb){
+        nBombNeighbor=nBomb;
+    }
 
 }
