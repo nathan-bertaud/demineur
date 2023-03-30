@@ -29,7 +29,7 @@ public class MyService extends Service {
         handler = new Handler();
         runnable = new Runnable() {
             public void run() {
-                Intent intent = new Intent(MainActivity.BROADCAST);
+                Intent intent = new Intent(GameActivity.BROADCAST);
                 intent.putExtra("timer", timer);
                 sendBroadcast(intent);
                 count++;
