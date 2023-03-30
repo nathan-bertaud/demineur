@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         startService(intentService);
-        update();
+        //TODO Appeler fonction pour mettre à jour le score précédent update();
     }
 
     @Override
@@ -46,9 +46,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 //TODO casser une case
-                editor.putString("ANCIEN_SCORE", binding.timerTextview.getText().toString());
-                editor.apply();
-                update();
             }
         });
 
@@ -71,6 +68,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         stopService(intentService);
+    }
+
+    private void sauvegarderScore(){
+
+        //Si gagnant sauvegarder le score de la partie précédente
+        //editor.putString("ANCIEN_SCORE", binding.timerTextview.getText().toString());
+        //editor.apply();
+        // update();
     }
 
     private void update() {
