@@ -12,32 +12,24 @@ import com.example.demineur.databinding.FragmentSquareBinding;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SquareFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SquareFragment extends Fragment {
+public class SquareFragment extends Fragment{
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
     private FragmentSquareBinding binding;
-    // TODO: Rename and change types of parameters
-    private int mState;
     private int nBombNeighbor;
-    private static int skin[]=new int[12];
-    public SquareFragment() {
-        // Required empty public constructor
-    }
+    private boolean mIsBomb;
+    private boolean mIsEmpty;
+    private boolean mIsUndiscovered;
+    private static int skin[]=new int[13];
+    SquareFragmentInterface mInterface;
 
-    // TODO: Rename and change types and number of parameters
-    public static SquareFragment newInstance(int state) {
+    public SquareFragment(boolean isBomb) {
+        this.mIsBomb=isBomb;
+        this.mIsEmpty=!isBomb;
+        this.mIsUndiscovered=true;
 
-        SquareFragment fragment = new SquareFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_PARAM1, state);
-        fragment.setArguments(args);
-
-        skin[0]=R.drawable.case_vide;
+        skin[0]=R.drawable.vide;
         skin[1]=R.drawable.numero_1;
         skin[2]=R.drawable.numero_2;
         skin[3]=R.drawable.numero_3;
@@ -49,15 +41,12 @@ public class SquareFragment extends Fragment {
         skin[9]=R.drawable.numero_9;
         skin[10]=R.drawable.drapeau;
         skin[11]=R.drawable.pixil_frame_0;
-        return fragment;
+        skin[12]=R.drawable.cachee;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mState = getArguments().getInt(ARG_PARAM1);
-        }
     }
 
     @Override
@@ -66,7 +55,6 @@ public class SquareFragment extends Fragment {
         binding.imageViewSquare.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                System.out.println(nBombNeighbor);
                 isClicked();
             }
         });
@@ -77,36 +65,57 @@ public class SquareFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentSquareBinding.inflate(inflater, container, false);
-        updateAppearance();
+        updateSkin();
         return binding.getRoot();
     }
 
+    public void setInterface(SquareFragmentInterface xInterface) {
+        this.mInterface = xInterface;
+    }
 
+    public void updateSkin(){
+        if(this.isUndiscovered()){
+            binding.imageViewSquare.setImageResource(skin[12]);
+        }
+        if(this.isEmpty()&&!this.isUndiscovered()){
+            binding.imageViewSquare.setImageResource(skin[nBombNeighbor]);
+        }
+        if(this.isBomb()&&!this.isUndiscovered()){
+            binding.imageViewSquare.setImageResource(skin[11]);
+        }
 
-    public void updateAppearance(){
-        binding.imageViewSquare.setImageResource(skin[mState]);
     }
 
     public boolean isBomb(){
-        if (mState==11){
+        return mIsBomb;
+    }
+    public void setBomb(){
+        mIsBomb=true;
+    }
+
+    public boolean isEmpty(){
+        if (mIsEmpty){
             return true;
         }
         return false;
     }
 
-    public void isClicked(){
-        if (mState==0){
-            this.setState(nBombNeighbor);
-            updateAppearance();
+    public boolean isUndiscovered(){
+        if (mIsUndiscovered){
+            return true;
         }
+        return false;
+    }
+    public void isClicked(){
+        mIsUndiscovered=false;
+        updateSkin();
+        mInterface.squareClicked();
     }
 
-    protected void setState(int state){
-        mState=state;
-    }
 
     protected void setnBombNeighbor(int nBomb){
         nBombNeighbor=nBomb;
     }
+
 
 }

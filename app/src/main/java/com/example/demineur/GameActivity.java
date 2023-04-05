@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.content.BroadcastReceiver;
@@ -16,7 +17,7 @@ import com.example.demineur.databinding.ActivityGameBinding;
 
 import java.util.Random;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements SquareFragmentInterface{
 
     private SquareFragment squareTab[][]=new SquareFragment[10][10];
     private int nrow=4;
@@ -25,6 +26,8 @@ public class GameActivity extends AppCompatActivity {
 
     private ActivityGameBinding binding;
     private Intent intentService;
+
+    private MediaPlayer mediaPlayer;
     static public final String BROADCAST = "timer.projet";
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
@@ -42,6 +45,9 @@ public class GameActivity extends AppCompatActivity {
         tableRow[2]=R.id.tableRow3;
         tableRow[3]=R.id.tableRow4;
         loadFragments();
+        mediaPlayer = MediaPlayer.create(this, R.raw.musique);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.setVolume(100, 100);
     }
 
     @Override
@@ -49,12 +55,14 @@ public class GameActivity extends AppCompatActivity {
         super.onStart();
         startService(intentService);
         //TODO Appeler fonction pour mettre à jour le score précédent update();
+        mediaPlayer.start();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         registerReceiver(receiver, new IntentFilter(BROADCAST));
+
         binding.imageView2.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -81,6 +89,8 @@ public class GameActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         stopService(intentService);
+        mediaPlayer.stop();
+        mediaPlayer.release();
     }
 
     private void sauvegarderScore(){
@@ -106,55 +116,106 @@ public class GameActivity extends AppCompatActivity {
     };
 
     protected void loadFragments(){
+        int bombsGenerated[];
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         for(int i=0;i<nrow;i++){
             for(int j=0;j<ncol;j++){
-                squareTab[i][j]=SquareFragment.newInstance(0);
-                ft.add(tableRow[i],squareTab[i][j]);
+                this.squareTab[i][j]=new SquareFragment(false);
+                this.squareTab[i][j].setInterface(this);
             }
         }
-        squareTab[1][1].setState(11);
-        squareTab[2][2].setState(11);
-        squareTab[2][3].setState(11);
-        checkBombs();
+        for(int nbBombs = 0; nbBombs < 3; nbBombs++){
+            bombsGenerated = this.generateBombs();
+            this.squareTab[bombsGenerated[0]][bombsGenerated[1]].setBomb();
+        }
+
+        for(int i=0;i<nrow;i++){
+            for(int j=0;j<ncol;j++){
+                ft.add(tableRow[i],this.squareTab[i][j]);
+            }
+        }
         ft.commit();
+        checkBombs();
+    }
+
+    private int[] generateBombs(){
+        int i = new Random().nextInt(4);
+        int j = new Random().nextInt(5);
+        return new int[]{i, j};
     }
 
     protected void checkBombs(){
         int nBomb=0;
         for(int i=0;i<nrow;i++){
             for(int j=0;j<ncol;j++){
-                if(!squareTab[i][j].isBomb()){nBomb=0;
+                if(!this.squareTab[i][j].isBomb()){
+                    nBomb=0;
                 if(j>0){
-                    if (squareTab[i][j-1].isBomb()){ nBomb++;}
+                    if (this.squareTab[i][j-1].isBomb()){ nBomb++;}
                 }
                 if(j<ncol-1){
-                    if (squareTab[i][j+1].isBomb()){ nBomb++;}
+                    if (this.squareTab[i][j+1].isBomb()){ nBomb++;}
                 }
                 if(i>0){
-                    if (squareTab[i-1][j].isBomb()){ nBomb++;}
+                    if (this.squareTab[i-1][j].isBomb()){ nBomb++;}
                     if(j>0){
-                        if (squareTab[i-1][j-1].isBomb()){ nBomb++;}
+                        if (this.squareTab[i-1][j-1].isBomb()){ nBomb++;}
                     }
                     if(j<ncol-1){
-                        if (squareTab[i-1][j+1].isBomb()){ nBomb++;}
+                        if (this.squareTab[i-1][j+1].isBomb()){ nBomb++;}
                     }
                 }
                 if(i<nrow-1){
-                    if (squareTab[i+1][j].isBomb()){ nBomb++;}
+                    if (this.squareTab[i+1][j].isBomb()){ nBomb++;}
                     if(j>0){
-                        if (squareTab[i+1][j-1].isBomb()){ nBomb++;}
+                        if (this.squareTab[i+1][j-1].isBomb()){ nBomb++;}
                     }
                     if(j<ncol-1){
-                        if (squareTab[i+1][j+1].isBomb()){ nBomb++;}
+                        if (this.squareTab[i+1][j+1].isBomb()){ nBomb++;}
                     }
                 }
-                squareTab[i][j].setnBombNeighbor(nBomb);
+                    this.squareTab[i][j].setnBombNeighbor(nBomb);
             }
         }}
     }
 
-        
+    protected boolean isWon() {
+        int EmptyCasesCount = 0;
+        int EmptyCasesDiscoveredCount = 0;
+        for (int i = 0; i < nrow; i++) {
+            for (int j = 0; j < ncol; j++) {
+                if (!this.squareTab[i][j].isBomb()) {
+                    EmptyCasesCount++;
+                    if (!this.squareTab[i][j].isUndiscovered()) {
+                        EmptyCasesDiscoveredCount++;
+                    }
+                }
+            }
+        }
+        if (EmptyCasesCount==EmptyCasesDiscoveredCount){
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean isLost() {
+        for (int i = 0; i < nrow; i++) {
+            for (int j = 0; j < ncol; j++) {
+                if (this.squareTab[i][j].isBomb()&&!this.squareTab[i][j].isUndiscovered()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void squareClicked(){
+        //ToDo
+        System.out.println("Coucou : "+isWon());
+        System.out.println("Coucou : "+isLost());
+    }
+
 }
 
 
