@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.renderscript.ScriptGroup;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ public class SquareFragment extends Fragment{
     private int nBombNeighbor;
     private boolean mIsBomb;
     private boolean mIsEmpty;
+    private boolean mIsFlag;
     private boolean mIsUndiscovered;
     private static int skin[]=new int[13];
     SquareFragmentInterface mInterface;
@@ -28,6 +30,7 @@ public class SquareFragment extends Fragment{
         this.mIsBomb=isBomb;
         this.mIsEmpty=!isBomb;
         this.mIsUndiscovered=true;
+        this.mIsFlag=false;
 
         skin[0]=R.drawable.vide;
         skin[1]=R.drawable.numero_1;
@@ -58,6 +61,11 @@ public class SquareFragment extends Fragment{
                 isClicked();
             }
         });
+
+        binding.imageViewSquare.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {mIsFlag=true;updateSkin(); return true;}
+        });
     }
 
     @Override
@@ -67,6 +75,10 @@ public class SquareFragment extends Fragment{
         binding = FragmentSquareBinding.inflate(inflater, container, false);
         updateSkin();
         return binding.getRoot();
+    }
+
+    public void setClickableFalse(){
+        this.binding.imageViewSquare.setClickable(false);
     }
 
     public void setInterface(SquareFragmentInterface xInterface) {
@@ -83,7 +95,9 @@ public class SquareFragment extends Fragment{
         if(this.isBomb()&&!this.isUndiscovered()){
             binding.imageViewSquare.setImageResource(skin[11]);
         }
-
+        if(this.mIsFlag&&this.isUndiscovered()){
+            binding.imageViewSquare.setImageResource(skin[10]);
+        }
     }
 
     public boolean isBomb(){
@@ -100,6 +114,10 @@ public class SquareFragment extends Fragment{
         return false;
     }
 
+    public void setUndiscovered(boolean b){
+        mIsUndiscovered=b;
+        updateSkin();
+    }
     public boolean isUndiscovered(){
         if (mIsUndiscovered){
             return true;
@@ -107,11 +125,11 @@ public class SquareFragment extends Fragment{
         return false;
     }
     public void isClicked(){
+        mIsFlag = false;
         mIsUndiscovered=false;
         updateSkin();
         mInterface.squareClicked();
     }
-
 
     protected void setnBombNeighbor(int nBomb){
         nBombNeighbor=nBomb;

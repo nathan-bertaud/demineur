@@ -14,7 +14,12 @@ import android.content.BroadcastReceiver;
 import android.widget.TableRow;
 
 import com.example.demineur.databinding.ActivityGameBinding;
+import com.example.demineur.databinding.ActivityOptionsBinding;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class GameActivity extends AppCompatActivity implements SquareFragmentInterface{
@@ -29,16 +34,28 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
 
     private MediaPlayer mediaPlayer;
     static public final String BROADCAST = "timer.projet";
+
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
+    private String prenom;
+    private String nom;
+    private Difficulte difficulte;
 
+    private int timer;
+    private int score;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityGameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        Intent lastIntent = getIntent();
+        Bundle bundle2 = lastIntent.getExtras();
+        Profil p = (Profil) bundle2.getSerializable("PROFIL");
+        this.prenom = p.getPrenom();
+        this.nom = p.getNom();
+        this.difficulte = p.getDifficulte();
         intentService = new Intent(this, MyService.class);
-        prefs = getSharedPreferences("MY_PREFS_NAME",MODE_PRIVATE);
+        prefs = getSharedPreferences("SCORE_DATA",MODE_PRIVATE);
         editor = prefs.edit();
         tableRow[0]=R.id.tableRow1;
         tableRow[1]=R.id.tableRow2;
@@ -62,21 +79,6 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
     protected void onResume() {
         super.onResume();
         registerReceiver(receiver, new IntentFilter(BROADCAST));
-
-        binding.imageView2.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                //TODO casser une case
-            }
-        });
-
-
-        binding.imageView3.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                //TODO Mettre un drapeau sur la case
-            }
-        });
     }
 
     @Override
@@ -110,10 +112,21 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
             if(bundle != null){
-                binding.timerTextview.setText(String.valueOf(bundle.getInt("timer")));
+                timer=bundle.getInt("timer");
+                binding.timerTextview.setText(String.valueOf(timer));
             }
         }
     };
+
+    private void savePreferences(int xScore){
+        Gson gson = new Gson();
+        String jsonGet = prefs.getString("LIST","");
+        List<Profil> list = gson.fromJson(jsonGet,new TypeToken<ArrayList<Profil>>(){}.getType() );
+        list.add(new Profil(this.nom,this.prenom,this.difficulte,xScore));
+        String jsonPut = gson.toJson(list);
+        editor.putString("LIST",jsonPut);
+        editor.apply();
+    }
 
     protected void loadFragments(){
         int bombsGenerated[];
@@ -209,11 +222,35 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         return false;
     }
 
+    public void endOfGame(){
+        if(isWon()||isLost()) {
+            score = timer;
+            if (isWon()) {
+                binding.textViewGameState.setText("WON ! Score is " + score);
+                savePreferences(score);
+            }
+            if (isLost()) {
+                binding.textViewGameState.setText("LOST !");
+                for (int i = 0; i < nrow; i++) {
+                    for (int j = 0; j < ncol; j++) {
+                        if (this.squareTab[i][j].isBomb()) {
+                            squareTab[i][j].setUndiscovered(false);
+                        }
+                    }
+                }
+            stopService(intentService);
+            for (int i = 0; i < nrow; i++) {
+                for (int j = 0; j < ncol; j++) {
+                    squareTab[i][j].setClickableFalse();
+                }
+            }
+        }
+    }
+    }
+
     @Override
     public void squareClicked(){
-        //ToDo
-        System.out.println("Coucou : "+isWon());
-        System.out.println("Coucou : "+isLost());
+        endOfGame();
     }
 
 }
