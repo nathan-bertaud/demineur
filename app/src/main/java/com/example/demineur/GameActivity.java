@@ -19,6 +19,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -79,7 +81,6 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
     protected void onStart() {
         super.onStart();
         startService(intentService);
-        //TODO Appeler fonction pour mettre à jour le score précédent update();
         mediaPlayer.start();
     }
 
@@ -135,7 +136,10 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
     private void savePreferences(int xScore){
         Gson gson = new Gson();
         String jsonGet = prefs.getString("LIST","");
-        List<Profil> list = gson.fromJson(jsonGet,new TypeToken<ArrayList<Profil>>(){}.getType() );
+        List<Profil> list = new ArrayList<>();
+        if(!jsonGet.equals("")){
+            list = gson.fromJson(jsonGet,new TypeToken<ArrayList<Profil>>(){}.getType());
+        }
         list.add(new Profil(this.nom,this.prenom,this.difficulte,xScore));
         String jsonPut = gson.toJson(list);
         editor.putString("LIST",jsonPut);
@@ -147,7 +151,7 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         for(int i=0;i<nrow;i++){
             for(int j=0;j<ncol;j++){
-                this.squareTab[i][j]=new SquareFragment(false);
+                this.squareTab[i][j]=new SquareFragment(false,i,j);
                 this.squareTab[i][j].setInterface(this);
             }
         }
@@ -242,8 +246,10 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
             if (isWon()) {
                 binding.textViewGameState.setText("WON ! Score is " + score);
                 savePreferences(score);
+                loadScores();
             }
             if (isLost()) {
+                loadScores();
                 binding.textViewGameState.setText("LOST !");
                 for (int i = 0; i < nrow; i++) {
                     for (int j = 0; j < ncol; j++) {
@@ -262,11 +268,75 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
     }
     }
 
+    private void loadScores() {
+        Gson gson = new Gson();
+        String jsonGet = prefs.getString("LIST","");
+        List<Profil> list = new ArrayList<>();
+        if(!jsonGet.equals("")){
+            list = gson.fromJson(jsonGet,new TypeToken<ArrayList<Profil>>(){}.getType());
+        }
+        List<Profil> listDif = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            if(this.difficulte == list.get(i).getDifficulte()){
+                listDif.add(list.get(i));
+            }
+        }
+        Collections.sort(listDif, Comparator.comparingInt(Profil::getScore));
+        if(listDif.size() > 0){
+            this.binding.textViewRank1Name.setText(listDif.get(0).getPrenom() + " " + listDif.get(0).getNom());
+            this.binding.textViewRank1Score.setText(String.valueOf(listDif.get(0).getScore()));
+        }
+        if(listDif.size() > 1){
+            this.binding.textViewRank2Name.setText(listDif.get(1).getPrenom() + " " + listDif.get(1).getNom());
+            this.binding.textViewRank2Score.setText(String.valueOf(listDif.get(1).getScore()));
+        }
+        if(listDif.size() > 2){
+            this.binding.textViewRank3Name.setText(listDif.get(2).getPrenom() + " " + listDif.get(2).getNom());
+            this.binding.textViewRank3Score.setText(String.valueOf(listDif.get(2).getScore()));
+        }
+        this.binding.TableLayoutRanks.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void squareClicked(){
         endOfGame();
     }
 
+    @Override
+    public void squareEmptyClicked(int row, int col) {
+        if (!squareTab[row][col].isBomb() && squareTab[row][col].getMIsUndiscovered()) {
+            squareTab[row][col].setmIsUndiscovered(false);
+            squareTab[row][col].updateSkin();
+            if(squareTab[row][col].getnBombNeighbor() != 0)
+            {
+                return;
+            }
+                if (col > 0) {
+                        squareEmptyClicked(row, col - 1);
+                }
+                if (col < ncol - 1) {
+                        squareEmptyClicked(row, col + 1);
+                }
+                if (row > 0) {
+                        squareEmptyClicked(row - 1, col);
+                    if (col > 0) {
+                            squareEmptyClicked(row - 1, col - 1);
+                    }
+                    if (col < ncol - 1) {
+                            squareEmptyClicked(row - 1, col + 1);
+                    }
+                }
+                if (row < nrow - 1) {
+                        squareEmptyClicked(row + 1, col);
+                    if (col > 0) {
+                            squareEmptyClicked(row + 1, col - 1);
+                    }
+                    if (col < ncol - 1) {
+                            squareEmptyClicked(row + 1, col + 1);
+                    }
+                }
+            }
+        }
 }
 
 

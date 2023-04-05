@@ -76,6 +76,96 @@
             android:layout_weight="1"
             android:text="Restart" />
 
+        <TableLayout
+            android:id="@+id/TableLayoutRanks"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:stretchColumns="1"
+            android:visibility="invisible">
+
+            <TableRow
+                android:id="@+id/TableRowRank1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textViewRank1Rank"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="Rank 1 :" />
+
+                <TextView
+                    android:id="@+id/textViewRank1Name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="N/A" />
+
+                <TextView
+                    android:id="@+id/textViewRank1Score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="N/A" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/TableRowRank2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textViewRank2Rank"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="Rank 2 :" />
+
+                <TextView
+                    android:id="@+id/textViewRank2Name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="N/A" />
+
+                <TextView
+                    android:id="@+id/textViewRank2Score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="N/A" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/TableRowRank3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textViewRank3Rank"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="Rank 3 :" />
+
+                <TextView
+                    android:id="@+id/textViewRank3Name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="N/A" />
+
+                <TextView
+                    android:id="@+id/textViewRank3Score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="N/A" />
+            </TableRow>
+
+        </TableLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

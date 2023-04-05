@@ -22,16 +22,28 @@ public class SquareFragment extends Fragment{
     private boolean mIsBomb;
     private boolean mIsEmpty;
     private boolean mIsFlag;
+    private int x;
+    private int y;
+
+    public boolean getMIsEmpty() {
+        return mIsEmpty;
+    }
+
+    public boolean getMIsUndiscovered() {
+        return mIsUndiscovered;
+    }
+
     private boolean mIsUndiscovered;
     private static int skin[]=new int[13];
     SquareFragmentInterface mInterface;
 
-    public SquareFragment(boolean isBomb) {
+    public SquareFragment(boolean isBomb,int mx,int my) {
         this.mIsBomb=isBomb;
         this.mIsEmpty=!isBomb;
         this.mIsUndiscovered=true;
         this.mIsFlag=false;
-
+        this.x = mx;
+        this.y = my;
         skin[0]=R.drawable.vide;
         skin[1]=R.drawable.numero_1;
         skin[2]=R.drawable.numero_2;
@@ -107,6 +119,10 @@ public class SquareFragment extends Fragment{
         mIsBomb=true;
     }
 
+    public int getnBombNeighbor(){
+        return nBombNeighbor;
+    }
+
     public boolean isEmpty(){
         if (mIsEmpty){
             return true;
@@ -124,11 +140,22 @@ public class SquareFragment extends Fragment{
         }
         return false;
     }
+
+    public void setmIsUndiscovered(boolean mIsUndiscovered) {
+        this.mIsUndiscovered = mIsUndiscovered;
+    }
+
     public void isClicked(){
+        if(nBombNeighbor>0 || isBomb()){
         mIsFlag = false;
         mIsUndiscovered=false;
         updateSkin();
         mInterface.squareClicked();
+        }else{
+            mIsFlag = false;
+            mInterface.squareEmptyClicked(this.x,this.y);
+            updateSkin();
+        }
     }
 
     protected void setnBombNeighbor(int nBomb){
