@@ -71,7 +71,6 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
     protected void onStart() {
         super.onStart();
         startService(intentService);
-        //TODO Appeler fonction pour mettre à jour le score précédent update();
         mediaPlayer.start();
     }
 
@@ -133,7 +132,7 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         for(int i=0;i<nrow;i++){
             for(int j=0;j<ncol;j++){
-                this.squareTab[i][j]=new SquareFragment(false);
+                this.squareTab[i][j]=new SquareFragment(false,i,j);
                 this.squareTab[i][j].setInterface(this);
             }
         }
@@ -253,6 +252,41 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         endOfGame();
     }
 
+    @Override
+    public void squareEmptyClicked(int row, int col) {
+        if (!squareTab[row][col].isBomb() && squareTab[row][col].getMIsUndiscovered()) {
+            squareTab[row][col].setmIsUndiscovered(false);
+            squareTab[row][col].updateSkin();
+            if(squareTab[row][col].getnBombNeighbor() != 0)
+            {
+                return;
+            }
+                if (col > 0) {
+                        squareEmptyClicked(row, col - 1);
+                }
+                if (col < ncol - 1) {
+                        squareEmptyClicked(row, col + 1);
+                }
+                if (row > 0) {
+                        squareEmptyClicked(row - 1, col);
+                    if (col > 0) {
+                            squareEmptyClicked(row - 1, col - 1);
+                    }
+                    if (col < ncol - 1) {
+                            squareEmptyClicked(row - 1, col + 1);
+                    }
+                }
+                if (row < nrow - 1) {
+                        squareEmptyClicked(row + 1, col);
+                    if (col > 0) {
+                            squareEmptyClicked(row + 1, col - 1);
+                    }
+                    if (col < ncol - 1) {
+                            squareEmptyClicked(row + 1, col + 1);
+                    }
+                }
+            }
+        }
 }
 
 
