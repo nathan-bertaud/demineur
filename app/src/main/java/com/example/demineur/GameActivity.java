@@ -118,11 +118,11 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         }
     };
 
-    private void savePreferences(int score){
+    private void savePreferences(int xScore){
         Gson gson = new Gson();
         String jsonGet = prefs.getString("LIST","");
         List<Profil> list = gson.fromJson(jsonGet,new TypeToken<ArrayList<Profil>>(){}.getType() );
-        list.add(new Profil(this.nom,this.prenom,this.difficulte,score));
+        list.add(new Profil(this.nom,this.prenom,this.difficulte,xScore));
         String jsonPut = gson.toJson(list);
         editor.putString("LIST",jsonPut);
         editor.apply();
@@ -227,18 +227,27 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
             score = timer;
             if (isWon()) {
                 binding.textViewGameState.setText("WON ! Score is " + score);
+                savePreferences(score);
             }
             if (isLost()) {
                 binding.textViewGameState.setText("LOST !");
-            }
+                for (int i = 0; i < nrow; i++) {
+                    for (int j = 0; j < ncol; j++) {
+                        if (this.squareTab[i][j].isBomb()) {
+                            squareTab[i][j].setUndiscovered(false);
+                        }
+                    }
+                }
+            stopService(intentService);
             for (int i = 0; i < nrow; i++) {
                 for (int j = 0; j < ncol; j++) {
                     squareTab[i][j].setClickableFalse();
                 }
             }
         }
-
     }
+    }
+
     @Override
     public void squareClicked(){
         endOfGame();

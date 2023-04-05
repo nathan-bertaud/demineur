@@ -114,6 +114,10 @@ public class SquareFragment extends Fragment{
         return false;
     }
 
+    public void setUndiscovered(boolean b){
+        mIsUndiscovered=b;
+        updateSkin();
+    }
     public boolean isUndiscovered(){
         if (mIsUndiscovered){
             return true;

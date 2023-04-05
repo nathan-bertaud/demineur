@@ -11,6 +11,7 @@ public class MyService extends Service {
     private Handler handler;
     private int timer = 0;
     private int count = 0;
+    private boolean shutdown=false;
     public class MyBinder extends Binder {
         MyService getService() {
             return MyService.this;
@@ -29,6 +30,7 @@ public class MyService extends Service {
         handler = new Handler();
         runnable = new Runnable() {
             public void run() {
+                if (shutdown==false){
                 Intent intent = new Intent(GameActivity.BROADCAST);
                 intent.putExtra("timer", timer);
                 sendBroadcast(intent);
@@ -37,10 +39,18 @@ public class MyService extends Service {
                 if(count < 1000){
                     handler.postDelayed(this, 1000);
                 }
+                }
+
             }
         };
         handler.postDelayed(runnable,1000);
         return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        shutdown=true;
+        super.onDestroy();
     }
 
 }
