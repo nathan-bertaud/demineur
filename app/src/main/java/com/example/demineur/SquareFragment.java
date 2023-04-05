@@ -119,6 +119,10 @@ public class SquareFragment extends Fragment{
         mIsBomb=true;
     }
 
+    public int getnBombNeighbor(){
+        return nBombNeighbor;
+    }
+
     public boolean isEmpty(){
         if (mIsEmpty){
             return true;
@@ -138,15 +142,15 @@ public class SquareFragment extends Fragment{
     }
 
     public void isClicked(){
-        if(!mIsEmpty){
+        if(nBombNeighbor>0 || isBomb()){
         mIsFlag = false;
         mIsUndiscovered=false;
         updateSkin();
         mInterface.squareClicked();
         }else{
             mIsFlag = false;
-            updateSkin();
             mInterface.squareEmptyClicked(this.x,this.y);
+            updateSkin();
         }
     }
 

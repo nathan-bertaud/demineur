@@ -245,22 +245,39 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
 
     @Override
     public void squareEmptyClicked(int row, int col) {
-        // Marquer la case comme étant révélée
-        squareTab[row][col].setmIsUndiscovered(false);
-
-        // Parcourir les cases adjacentes
-        for (int i = Math.max(row - 1, 0); i <= Math.min(row + 1, squareTab.length - 1); i++) {
-            for (int j = Math.max(col - 1, 0); j <= Math.min(col + 1, squareTab[i].length - 1); j++) {
-                // Vérifier si la case n'a pas déjà été révélée
-                if (squareTab[i][j].getMIsUndiscovered()) {
-                    // Appeler la fonction récursivement pour la case adjacente
-                    squareEmptyClicked(i, j);
+        if (!squareTab[row][col].isBomb() && squareTab[row][col].getMIsUndiscovered()) {
+            squareTab[row][col].setmIsUndiscovered(false);
+            squareTab[row][col].updateSkin();
+            if(squareTab[row][col].getnBombNeighbor() != 0)
+            {
+                return;
+            }
+                if (col > 0) {
+                        squareEmptyClicked(row, col - 1);
+                }
+                if (col < ncol - 1) {
+                        squareEmptyClicked(row, col + 1);
+                }
+                if (row > 0) {
+                        squareEmptyClicked(row - 1, col);
+                    if (col > 0) {
+                            squareEmptyClicked(row - 1, col - 1);
+                    }
+                    if (col < ncol - 1) {
+                            squareEmptyClicked(row - 1, col + 1);
+                    }
+                }
+                if (row < nrow - 1) {
+                        squareEmptyClicked(row + 1, col);
+                    if (col > 0) {
+                            squareEmptyClicked(row + 1, col - 1);
+                    }
+                    if (col < ncol - 1) {
+                            squareEmptyClicked(row + 1, col + 1);
+                    }
                 }
             }
         }
-    }
-
-
 }
 
 
