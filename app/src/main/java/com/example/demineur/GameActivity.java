@@ -14,7 +14,12 @@ import android.content.BroadcastReceiver;
 import android.widget.TableRow;
 
 import com.example.demineur.databinding.ActivityGameBinding;
+import com.example.demineur.databinding.ActivityOptionsBinding;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class GameActivity extends AppCompatActivity implements SquareFragmentInterface{
@@ -31,14 +36,23 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
     static public final String BROADCAST = "timer.projet";
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
+    private String prenom;
+    private String nom;
+    private Difficulte difficulte;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityGameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        Intent lastIntent = getIntent();
+        Bundle bundle2 = lastIntent.getExtras();
+        Profil p = (Profil) bundle2.getSerializable("PROFIL");
+        this.prenom = p.getPrenom();
+        this.nom = p.getNom();
+        this.difficulte = p.getDifficulte();
         intentService = new Intent(this, MyService.class);
-        prefs = getSharedPreferences("MY_PREFS_NAME",MODE_PRIVATE);
+        prefs = getSharedPreferences("SCORE_DATA",MODE_PRIVATE);
         editor = prefs.edit();
         tableRow[0]=R.id.tableRow1;
         tableRow[1]=R.id.tableRow2;
@@ -99,6 +113,16 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
             }
         }
     };
+
+    private void savePreferences(int score){
+        Gson gson = new Gson();
+        String jsonGet = prefs.getString("LIST","");
+        List<Profil> list = gson.fromJson(jsonGet,new TypeToken<ArrayList<Profil>>(){}.getType() );
+        list.add(new Profil(this.nom,this.prenom,this.difficulte,score));
+        String jsonPut = gson.toJson(list);
+        editor.putString("LIST",jsonPut);
+        editor.apply();
+    }
 
     protected void loadFragments(){
         int bombsGenerated[];

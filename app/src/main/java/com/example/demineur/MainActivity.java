@@ -2,7 +2,6 @@ package com.example.demineur;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -14,14 +13,13 @@ public class MainActivity extends AppCompatActivity {
     private String prenom = "joueur";
     private String nom = "1";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         Intent lastIntent = getIntent();
         Bundle bundle = lastIntent.getExtras();
-
         if(bundle  != null){
             String activityName = bundle.getString("ActivityName");
             if(activityName.equals("Options")){
@@ -46,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
         });
         binding.button3.setOnClickListener(view ->{
             Intent intent = new Intent(MainActivity.this,GameActivity.class);
+            Profil profil =  new Profil(this.nom,this.prenom, this.difficulte,0);
+            Bundle bundle2 = new Bundle();
+            bundle2.putSerializable("PROFIL",profil);
+            intent.putExtras(bundle2);
             startActivity(intent);
         });
 
