@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intentOptions = new Intent(MainActivity.this,Options.class);
             Profil profil =  new Profil(this.nom,this.prenom, this.difficulte,0);
             Bundle bundle2 = new Bundle();
-            bundle2.putSerializable("PROFIL",profil);s
+            bundle2.putSerializable("PROFIL",profil);
             intentOptions.putExtras(bundle2);
             startActivity(intentOptions);
         });

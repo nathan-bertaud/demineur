@@ -109,13 +109,13 @@ public class GameActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         for(int i=0;i<nrow;i++){
             for(int j=0;j<ncol;j++){
-                squareTab[i][j]=SquareFragment.newInstance(12);
+                squareTab[i][j]=SquareFragment.newInstance(false);
                 ft.add(tableRow[i],squareTab[i][j]);
             }
         }
-        squareTab[1][1].setState(11);
-        squareTab[2][2].setState(11);
-        squareTab[2][3].setState(11);
+        squareTab[1][1].setBomb();
+        squareTab[2][2].setBomb();
+        squareTab[2][3].setBomb();
         checkBombs();
         ft.commit();
     }
@@ -124,7 +124,8 @@ public class GameActivity extends AppCompatActivity {
         int nBomb=0;
         for(int i=0;i<nrow;i++){
             for(int j=0;j<ncol;j++){
-                if(!squareTab[i][j].isBomb()){nBomb=0;
+                if(!squareTab[i][j].isBomb()){
+                    nBomb=0;
                 if(j>0){
                     if (squareTab[i][j-1].isBomb()){ nBomb++;}
                 }

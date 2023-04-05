@@ -19,24 +19,25 @@ public class SquareFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM1 = "isBomb";
     private FragmentSquareBinding binding;
     // TODO: Rename and change types of parameters
-    private int mState;
     private int nBombNeighbor;
+    private boolean mIsBomb;
+    private boolean mIsEmpty;
+    private boolean mIsUndiscovered;
     private static int skin[]=new int[13];
     public SquareFragment() {
         // Required empty public constructor
     }
 
     // TODO: Rename and change types and number of parameters
-    public static SquareFragment newInstance(int state) {
+    public static SquareFragment newInstance(boolean isBomb) {
 
         SquareFragment fragment = new SquareFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PARAM1, state);
+        args.putBoolean(ARG_PARAM1, isBomb);
         fragment.setArguments(args);
-
         skin[0]=R.drawable.vide;
         skin[1]=R.drawable.numero_1;
         skin[2]=R.drawable.numero_2;
@@ -57,8 +58,9 @@ public class SquareFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mState = getArguments().getInt(ARG_PARAM1);
+            mIsBomb = getArguments().getBoolean(ARG_PARAM1);
         }
+        System.out.println(this.mIsBomb);
     }
 
     @Override
@@ -78,33 +80,54 @@ public class SquareFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentSquareBinding.inflate(inflater, container, false);
-        updateAppearance();
+        updateSkin();
         return binding.getRoot();
     }
 
 
 
-    public void updateAppearance(){
-        binding.imageViewSquare.setImageResource(skin[mState]);
+    public void updateSkin(){
+        if(this.isEmpty()&&!this.isUndiscovered()){
+            binding.imageViewSquare.setImageResource(skin[nBombNeighbor]);
+        }
+        if(this.isBomb()&&!this.isUndiscovered()){
+            binding.imageViewSquare.setImageResource(skin[11]);
+        }
+
     }
 
     public boolean isBomb(){
-        if (mState==11){
+        if (mIsBomb){
+            return true;
+        }
+        return false;
+    }
+    public void setBomb(){
+        mIsBomb=true;
+    }
+
+    public boolean isEmpty(){
+        if (mIsEmpty){
             return true;
         }
         return false;
     }
 
+    public boolean isUndiscovered(){
+        if (mIsUndiscovered){
+            return true;
+        }
+        return false;
+    }
     public void isClicked(){
-        if ((mState==12)&&(!this.isBomb())){
-            this.setState(nBombNeighbor);
-            updateAppearance();
+        if ((this.isEmpty())){
+            updateSkin();
+        }
+        if ((this.isBomb())){
+            updateSkin();
         }
     }
 
-    protected void setState(int state){
-        mState=state;
-    }
 
     protected void setnBombNeighbor(int nBomb){
         nBombNeighbor=nBomb;
