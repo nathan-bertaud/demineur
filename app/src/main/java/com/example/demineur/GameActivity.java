@@ -17,7 +17,7 @@ import com.example.demineur.databinding.ActivityGameBinding;
 
 import java.util.Random;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements SquareFragmentInterface{
 
     private SquareFragment squareTab[][]=new SquareFragment[10][10];
     private int nrow=4;
@@ -62,6 +62,7 @@ public class GameActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         registerReceiver(receiver, new IntentFilter(BROADCAST));
+
         binding.imageView2.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -119,6 +120,7 @@ public class GameActivity extends AppCompatActivity {
         for(int i=0;i<nrow;i++){
             for(int j=0;j<ncol;j++){
                 this.squareTab[i][j]=new SquareFragment(false);
+                this.squareTab[i][j].setInterface(this);
             }
         }
         this.squareTab[1][1].setBomb();
@@ -169,7 +171,31 @@ public class GameActivity extends AppCompatActivity {
         }}
     }
 
-        
+    protected boolean isWon() {
+        int EmptyCasesCount = 0;
+        int EmptyCasesDiscoveredCount = 0;
+        for (int i = 0; i < nrow; i++) {
+            for (int j = 0; j < ncol; j++) {
+                if (!this.squareTab[i][j].isBomb()) {
+                    EmptyCasesCount++;
+                    if (!this.squareTab[i][j].isUndiscovered()) {
+                        EmptyCasesDiscoveredCount++;
+                    }
+                }
+            }
+        }
+        if (EmptyCasesCount==EmptyCasesDiscoveredCount){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void squareClicked(){
+        //ToDo
+        System.out.println("Coucou : "+isWon());
+    }
+
 }
 
 
