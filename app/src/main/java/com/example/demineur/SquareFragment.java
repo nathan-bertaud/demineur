@@ -12,26 +12,23 @@ import com.example.demineur.databinding.FragmentSquareBinding;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SquareFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SquareFragment extends Fragment {
+public class SquareFragment extends Fragment{
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "isBomb";
     private FragmentSquareBinding binding;
-    // TODO: Rename and change types of parameters
     private int nBombNeighbor;
     private boolean mIsBomb;
     private boolean mIsEmpty;
     private boolean mIsUndiscovered;
     private static int skin[]=new int[13];
+    SquareFragmentInterface mInterface;
 
     public SquareFragment(boolean isBomb) {
         this.mIsBomb=isBomb;
         this.mIsEmpty=!isBomb;
         this.mIsUndiscovered=true;
+
         skin[0]=R.drawable.vide;
         skin[1]=R.drawable.numero_1;
         skin[2]=R.drawable.numero_2;
@@ -58,7 +55,6 @@ public class SquareFragment extends Fragment {
         binding.imageViewSquare.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                System.out.println(nBombNeighbor);
                 isClicked();
             }
         });
@@ -73,7 +69,9 @@ public class SquareFragment extends Fragment {
         return binding.getRoot();
     }
 
-
+    public void setInterface(SquareFragmentInterface xInterface) {
+        this.mInterface = xInterface;
+    }
 
     public void updateSkin(){
         if(this.isUndiscovered()){
@@ -111,11 +109,13 @@ public class SquareFragment extends Fragment {
     public void isClicked(){
         mIsUndiscovered=false;
         updateSkin();
+        mInterface.squareClicked();
     }
 
 
     protected void setnBombNeighbor(int nBomb){
         nBombNeighbor=nBomb;
     }
+
 
 }
