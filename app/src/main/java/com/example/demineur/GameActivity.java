@@ -249,14 +249,12 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         squareTab[row][col].setmIsUndiscovered(false);
 
         // Parcourir les cases adjacentes
-        for (int i = row-1; i <= row+1; i++) {
-            for (int j = col-1; j <= col+1; j++) {
-                // Vérifier si la case est dans les limites du tableau
-                if (i >= 0 && i < squareTab.length && j >= 0 && j < squareTab[i].length) {
-                    // Vérifier si la case n'a pas déjà été révélée
-                    if (squareTab[i][j].getMIsUndiscovered()) {
-                        squareEmptyClicked(i, j);
-                    }
+        for (int i = Math.max(row - 1, 0); i <= Math.min(row + 1, squareTab.length - 1); i++) {
+            for (int j = Math.max(col - 1, 0); j <= Math.min(col + 1, squareTab[i].length - 1); j++) {
+                // Vérifier si la case n'a pas déjà été révélée
+                if (squareTab[i][j].getMIsUndiscovered()) {
+                    // Appeler la fonction récursivement pour la case adjacente
+                    squareEmptyClicked(i, j);
                 }
             }
         }
