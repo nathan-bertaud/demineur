@@ -109,7 +109,7 @@ public class GameActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         for(int i=0;i<nrow;i++){
             for(int j=0;j<ncol;j++){
-                squareTab[i][j]=SquareFragment.newInstance(0);
+                squareTab[i][j]=SquareFragment.newInstance(12);
                 ft.add(tableRow[i],squareTab[i][j]);
             }
         }

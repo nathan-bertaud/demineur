@@ -24,7 +24,7 @@ public class SquareFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private int mState;
     private int nBombNeighbor;
-    private static int skin[]=new int[12];
+    private static int skin[]=new int[13];
     public SquareFragment() {
         // Required empty public constructor
     }
@@ -37,7 +37,7 @@ public class SquareFragment extends Fragment {
         args.putInt(ARG_PARAM1, state);
         fragment.setArguments(args);
 
-        skin[0]=R.drawable.case_vide;
+        skin[0]=R.drawable.vide;
         skin[1]=R.drawable.numero_1;
         skin[2]=R.drawable.numero_2;
         skin[3]=R.drawable.numero_3;
@@ -49,6 +49,7 @@ public class SquareFragment extends Fragment {
         skin[9]=R.drawable.numero_9;
         skin[10]=R.drawable.drapeau;
         skin[11]=R.drawable.pixil_frame_0;
+        skin[12]=R.drawable.cachee;
         return fragment;
     }
 
@@ -95,7 +96,7 @@ public class SquareFragment extends Fragment {
     }
 
     public void isClicked(){
-        if (mState==0){
+        if ((mState==12)&&(!this.isBomb())){
             this.setState(nBombNeighbor);
             updateAppearance();
         }
