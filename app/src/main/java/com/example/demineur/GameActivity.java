@@ -71,7 +71,6 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
     protected void onStart() {
         super.onStart();
         startService(intentService);
-        //TODO Appeler fonction pour mettre à jour le score précédent update();
         mediaPlayer.start();
     }
 
@@ -133,7 +132,7 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         for(int i=0;i<nrow;i++){
             for(int j=0;j<ncol;j++){
-                this.squareTab[i][j]=new SquareFragment(false);
+                this.squareTab[i][j]=new SquareFragment(false,i,j);
                 this.squareTab[i][j].setInterface(this);
             }
         }
@@ -243,6 +242,26 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
     public void squareClicked(){
         endOfGame();
     }
+
+    @Override
+    public void squareEmptyClicked(int row, int col) {
+        // Marquer la case comme étant révélée
+        squareTab[row][col].setmIsUndiscovered(false);
+
+        // Parcourir les cases adjacentes
+        for (int i = row-1; i <= row+1; i++) {
+            for (int j = col-1; j <= col+1; j++) {
+                // Vérifier si la case est dans les limites du tableau
+                if (i >= 0 && i < squareTab.length && j >= 0 && j < squareTab[i].length) {
+                    // Vérifier si la case n'a pas déjà été révélée
+                    if (squareTab[i][j].getMIsUndiscovered()) {
+                        squareEmptyClicked(i, j);
+                    }
+                }
+            }
+        }
+    }
+
 
 }
 
