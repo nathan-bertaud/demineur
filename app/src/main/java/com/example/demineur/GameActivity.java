@@ -109,48 +109,53 @@ public class GameActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         for(int i=0;i<nrow;i++){
             for(int j=0;j<ncol;j++){
-                squareTab[i][j]=SquareFragment.newInstance(false);
-                ft.add(tableRow[i],squareTab[i][j]);
+                this.squareTab[i][j]=new SquareFragment(false);
             }
         }
-        squareTab[1][1].setBomb();
-        squareTab[2][2].setBomb();
-        squareTab[2][3].setBomb();
-        checkBombs();
+        this.squareTab[1][1].setBomb();
+        this.squareTab[2][2].setBomb();
+        this.squareTab[2][3].setBomb();
+
+        for(int i=0;i<nrow;i++){
+            for(int j=0;j<ncol;j++){
+                ft.add(tableRow[i],this.squareTab[i][j]);
+            }
+        }
         ft.commit();
+        checkBombs();
     }
 
     protected void checkBombs(){
         int nBomb=0;
         for(int i=0;i<nrow;i++){
             for(int j=0;j<ncol;j++){
-                if(!squareTab[i][j].isBomb()){
+                if(!this.squareTab[i][j].isBomb()){
                     nBomb=0;
                 if(j>0){
-                    if (squareTab[i][j-1].isBomb()){ nBomb++;}
+                    if (this.squareTab[i][j-1].isBomb()){ nBomb++;}
                 }
                 if(j<ncol-1){
-                    if (squareTab[i][j+1].isBomb()){ nBomb++;}
+                    if (this.squareTab[i][j+1].isBomb()){ nBomb++;}
                 }
                 if(i>0){
-                    if (squareTab[i-1][j].isBomb()){ nBomb++;}
+                    if (this.squareTab[i-1][j].isBomb()){ nBomb++;}
                     if(j>0){
-                        if (squareTab[i-1][j-1].isBomb()){ nBomb++;}
+                        if (this.squareTab[i-1][j-1].isBomb()){ nBomb++;}
                     }
                     if(j<ncol-1){
-                        if (squareTab[i-1][j+1].isBomb()){ nBomb++;}
+                        if (this.squareTab[i-1][j+1].isBomb()){ nBomb++;}
                     }
                 }
                 if(i<nrow-1){
-                    if (squareTab[i+1][j].isBomb()){ nBomb++;}
+                    if (this.squareTab[i+1][j].isBomb()){ nBomb++;}
                     if(j>0){
-                        if (squareTab[i+1][j-1].isBomb()){ nBomb++;}
+                        if (this.squareTab[i+1][j-1].isBomb()){ nBomb++;}
                     }
                     if(j<ncol-1){
-                        if (squareTab[i+1][j+1].isBomb()){ nBomb++;}
+                        if (this.squareTab[i+1][j+1].isBomb()){ nBomb++;}
                     }
                 }
-                squareTab[i][j].setnBombNeighbor(nBomb);
+                    this.squareTab[i][j].setnBombNeighbor(nBomb);
             }
         }}
     }

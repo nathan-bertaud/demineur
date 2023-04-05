@@ -27,17 +27,11 @@ public class SquareFragment extends Fragment {
     private boolean mIsEmpty;
     private boolean mIsUndiscovered;
     private static int skin[]=new int[13];
-    public SquareFragment() {
-        // Required empty public constructor
-    }
 
-    // TODO: Rename and change types and number of parameters
-    public static SquareFragment newInstance(boolean isBomb) {
-
-        SquareFragment fragment = new SquareFragment();
-        Bundle args = new Bundle();
-        args.putBoolean(ARG_PARAM1, isBomb);
-        fragment.setArguments(args);
+    public SquareFragment(boolean isBomb) {
+        this.mIsBomb=isBomb;
+        this.mIsEmpty=!isBomb;
+        this.mIsUndiscovered=true;
         skin[0]=R.drawable.vide;
         skin[1]=R.drawable.numero_1;
         skin[2]=R.drawable.numero_2;
@@ -51,16 +45,11 @@ public class SquareFragment extends Fragment {
         skin[10]=R.drawable.drapeau;
         skin[11]=R.drawable.pixil_frame_0;
         skin[12]=R.drawable.cachee;
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mIsBomb = getArguments().getBoolean(ARG_PARAM1);
-        }
-        System.out.println(this.mIsBomb);
     }
 
     @Override
@@ -87,6 +76,9 @@ public class SquareFragment extends Fragment {
 
 
     public void updateSkin(){
+        if(this.isUndiscovered()){
+            binding.imageViewSquare.setImageResource(skin[12]);
+        }
         if(this.isEmpty()&&!this.isUndiscovered()){
             binding.imageViewSquare.setImageResource(skin[nBombNeighbor]);
         }
@@ -97,10 +89,7 @@ public class SquareFragment extends Fragment {
     }
 
     public boolean isBomb(){
-        if (mIsBomb){
-            return true;
-        }
-        return false;
+        return mIsBomb;
     }
     public void setBomb(){
         mIsBomb=true;
@@ -120,12 +109,8 @@ public class SquareFragment extends Fragment {
         return false;
     }
     public void isClicked(){
-        if ((this.isEmpty())){
-            updateSkin();
-        }
-        if ((this.isBomb())){
-            updateSkin();
-        }
+        mIsUndiscovered=false;
+        updateSkin();
     }
 
 
