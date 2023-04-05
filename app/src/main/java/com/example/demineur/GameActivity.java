@@ -115,15 +115,17 @@ public class GameActivity extends AppCompatActivity {
     };
 
     protected void loadFragments(){
+        int bombsGenerated[];
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         for(int i=0;i<nrow;i++){
             for(int j=0;j<ncol;j++){
                 this.squareTab[i][j]=new SquareFragment(false);
             }
         }
-        this.squareTab[1][1].setBomb();
-        this.squareTab[2][2].setBomb();
-        this.squareTab[2][3].setBomb();
+        for(int nbBombs = 0; nbBombs < 3; nbBombs++){
+            bombsGenerated = this.generateBombs();
+            this.squareTab[bombsGenerated[0]][bombsGenerated[1]].setBomb();
+        }
 
         for(int i=0;i<nrow;i++){
             for(int j=0;j<ncol;j++){
@@ -132,6 +134,12 @@ public class GameActivity extends AppCompatActivity {
         }
         ft.commit();
         checkBombs();
+    }
+
+    private int[] generateBombs(){
+        int i = new Random().nextInt(4);
+        int j = new Random().nextInt(5);
+        return new int[]{i, j};
     }
 
     protected void checkBombs(){
