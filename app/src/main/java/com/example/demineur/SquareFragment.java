@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.renderscript.ScriptGroup;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,6 +75,10 @@ public class SquareFragment extends Fragment{
         binding = FragmentSquareBinding.inflate(inflater, container, false);
         updateSkin();
         return binding.getRoot();
+    }
+
+    public void setClickableFalse(){
+        this.binding.imageViewSquare.setClickable(false);
     }
 
     public void setInterface(SquareFragmentInterface xInterface) {

@@ -34,12 +34,15 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
 
     private MediaPlayer mediaPlayer;
     static public final String BROADCAST = "timer.projet";
+
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
     private String prenom;
     private String nom;
     private Difficulte difficulte;
 
+    private int timer;
+    private int score;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,7 +112,8 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
             if(bundle != null){
-                binding.timerTextview.setText(String.valueOf(bundle.getInt("timer")));
+                timer=bundle.getInt("timer");
+                binding.timerTextview.setText(String.valueOf(timer));
             }
         }
     };
@@ -218,11 +222,26 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         return false;
     }
 
+    public void endOfGame(){
+        if(isWon()||isLost()) {
+            score = timer;
+            if (isWon()) {
+                binding.textViewGameState.setText("WON ! Score is " + score);
+            }
+            if (isLost()) {
+                binding.textViewGameState.setText("LOST !");
+            }
+            for (int i = 0; i < nrow; i++) {
+                for (int j = 0; j < ncol; j++) {
+                    squareTab[i][j].setClickableFalse();
+                }
+            }
+        }
+
+    }
     @Override
     public void squareClicked(){
-        //ToDo
-        System.out.println("Coucou : "+isWon());
-        System.out.println("Coucou : "+isLost());
+        endOfGame();
     }
 
 }
