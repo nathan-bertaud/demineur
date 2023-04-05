@@ -261,18 +261,24 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         if(!jsonGet.equals("")){
             list = gson.fromJson(jsonGet,new TypeToken<ArrayList<Profil>>(){}.getType());
         }
-        Collections.sort(list, Comparator.comparingInt(Profil::getScore));
-        if(list.size() > 0){
-            this.binding.textViewRank1Name.setText(list.get(0).getPrenom() + " " + list.get(0).getNom());
-            this.binding.textViewRank1Score.setText(String.valueOf(list.get(0).getScore()));
+        List<Profil> listDif = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            if(this.difficulte == list.get(i).getDifficulte()){
+                listDif.add(list.get(i));
+            }
         }
-        if(list.size() > 1){
-            this.binding.textViewRank2Name.setText(list.get(1).getPrenom() + " " + list.get(1).getNom());
-            this.binding.textViewRank2Score.setText(String.valueOf(list.get(1).getScore()));
+        Collections.sort(listDif, Comparator.comparingInt(Profil::getScore));
+        if(listDif.size() > 0){
+            this.binding.textViewRank1Name.setText(listDif.get(0).getPrenom() + " " + listDif.get(0).getNom());
+            this.binding.textViewRank1Score.setText(String.valueOf(listDif.get(0).getScore()));
         }
-        if(list.size() > 2){
-            this.binding.textViewRank3Name.setText(list.get(2).getPrenom() + " " + list.get(2).getNom());
-            this.binding.textViewRank3Score.setText(String.valueOf(list.get(2).getScore()));
+        if(listDif.size() > 1){
+            this.binding.textViewRank2Name.setText(listDif.get(1).getPrenom() + " " + listDif.get(1).getNom());
+            this.binding.textViewRank2Score.setText(String.valueOf(listDif.get(1).getScore()));
+        }
+        if(listDif.size() > 2){
+            this.binding.textViewRank3Name.setText(listDif.get(2).getPrenom() + " " + listDif.get(2).getNom());
+            this.binding.textViewRank3Score.setText(String.valueOf(listDif.get(2).getScore()));
         }
         this.binding.TableLayoutRanks.setVisibility(View.VISIBLE);
     }
