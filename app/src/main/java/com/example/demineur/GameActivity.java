@@ -19,6 +19,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -230,8 +232,10 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
             if (isWon()) {
                 binding.textViewGameState.setText("WON ! Score is " + score);
                 savePreferences(score);
+                loadScores();
             }
             if (isLost()) {
+                loadScores();
                 binding.textViewGameState.setText("LOST !");
                 for (int i = 0; i < nrow; i++) {
                     for (int j = 0; j < ncol; j++) {
@@ -248,6 +252,29 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
             }
         }
     }
+    }
+
+    private void loadScores() {
+        Gson gson = new Gson();
+        String jsonGet = prefs.getString("LIST","");
+        List<Profil> list = new ArrayList<>();
+        if(!jsonGet.equals("")){
+            list = gson.fromJson(jsonGet,new TypeToken<ArrayList<Profil>>(){}.getType());
+        }
+        Collections.sort(list, Comparator.comparingInt(Profil::getScore));
+        if(list.size() > 0){
+            this.binding.textViewRank1Name.setText(list.get(0).getPrenom() + " " + list.get(0).getNom());
+            this.binding.textViewRank1Score.setText(String.valueOf(list.get(0).getScore()));
+        }
+        if(list.size() > 1){
+            this.binding.textViewRank2Name.setText(list.get(1).getPrenom() + " " + list.get(1).getNom());
+            this.binding.textViewRank2Score.setText(String.valueOf(list.get(1).getScore()));
+        }
+        if(list.size() > 2){
+            this.binding.textViewRank3Name.setText(list.get(2).getPrenom() + " " + list.get(2).getNom());
+            this.binding.textViewRank3Score.setText(String.valueOf(list.get(2).getScore()));
+        }
+        this.binding.TableLayoutRanks.setVisibility(View.VISIBLE);
     }
 
     @Override

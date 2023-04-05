@@ -100,14 +100,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Tony Barbier" />
+                    android:text="N/A" />
 
                 <TextView
                     android:id="@+id/textViewRank1Score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="10" />
+                    android:text="N/A" />
             </TableRow>
 
             <TableRow
@@ -127,14 +127,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Tony Barbier" />
+                    android:text="N/A" />
 
                 <TextView
                     android:id="@+id/textViewRank2Score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="10" />
+                    android:text="N/A" />
             </TableRow>
 
             <TableRow
@@ -154,14 +154,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Tony Barbier" />
+                    android:text="N/A" />
 
                 <TextView
                     android:id="@+id/textViewRank3Score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="10" />
+                    android:text="N/A" />
             </TableRow>
 
         </TableLayout>
