@@ -17,8 +17,15 @@
             android:exported="true"></service>
 
         <activity
+            android:name=".Options"
+            android:exported="false" />
+        <activity
             android:name=".GameActivity"
-            android:exported="true">
+
+        android:exported="true"/>
+        <activity
+            android:name=".MainActivity"
+        android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
