@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.content.BroadcastReceiver;
@@ -35,6 +36,7 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
     private Intent intentService;
 
     private MediaPlayer mediaPlayer;
+    private MediaPlayer mediaplayer2;
     static public final String BROADCAST = "timer.projet";
 
     private SharedPreferences prefs;
@@ -65,6 +67,8 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         tableRow[3]=R.id.tableRow4;
         loadFragments();
         mediaPlayer = MediaPlayer.create(this, R.raw.musique);
+        mediaplayer2 = MediaPlayer.create(this, R.raw.musiquebombes);
+
         mediaPlayer.setLooping(true);
         mediaPlayer.setVolume(100, 100);
         binding.buttonRestart.setOnClickListener(view ->{
@@ -72,6 +76,7 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
             intent.putExtras(bundle2);
             stopService(intentService);
             mediaPlayer.stop();
+
             finish();
             startActivity(intent);
         });
@@ -108,18 +113,6 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         super.onStop();
         mediaPlayer.stop();
         mediaPlayer.release();
-    }
-
-    private void sauvegarderScore(){
-
-        //Si gagnant sauvegarder le score de la partie précédente
-        //editor.putString("ANCIEN_SCORE", binding.timerTextview.getText().toString());
-        //editor.apply();
-        // update();
-    }
-
-    private void update() {
-        //TODO Faire quelque chose avec le score sauvegardé.
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -233,6 +226,8 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         for (int i = 0; i < nrow; i++) {
             for (int j = 0; j < ncol; j++) {
                 if (this.squareTab[i][j].isBomb()&&!this.squareTab[i][j].isUndiscovered()) {
+                    mediaPlayer.stop();
+                    mediaplayer2.start();
                     return true;
                 }
             }
