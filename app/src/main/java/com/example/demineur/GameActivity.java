@@ -120,7 +120,10 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
     private void savePreferences(int xScore){
         Gson gson = new Gson();
         String jsonGet = prefs.getString("LIST","");
-        List<Profil> list = gson.fromJson(jsonGet,new TypeToken<ArrayList<Profil>>(){}.getType());
+        List<Profil> list = new ArrayList<>();
+        if(!jsonGet.equals("")){
+            list = gson.fromJson(jsonGet,new TypeToken<ArrayList<Profil>>(){}.getType());
+        }
         list.add(new Profil(this.nom,this.prenom,this.difficulte,xScore));
         String jsonPut = gson.toJson(list);
         editor.putString("LIST",jsonPut);
