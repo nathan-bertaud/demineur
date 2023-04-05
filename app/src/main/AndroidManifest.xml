@@ -20,9 +20,6 @@
             android:name=".Options"
             android:exported="false" />
         <activity
-            android:name=".Terrain"
-            android:exported="false" />
-        <activity
             android:name=".GameActivity"
 
         android:exported="true"/>

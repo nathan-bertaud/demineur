@@ -39,12 +39,12 @@ public class MainActivity extends AppCompatActivity {
             Intent intentOptions = new Intent(MainActivity.this,Options.class);
             Profil profil =  new Profil(this.nom,this.prenom, this.difficulte,0);
             Bundle bundle2 = new Bundle();
-            bundle2.putSerializable("PROFIL",profil);
+            bundle2.putSerializable("PROFIL",profil);s
             intentOptions.putExtras(bundle2);
             startActivity(intentOptions);
         });
         binding.button3.setOnClickListener(view ->{
-            Intent intent = new Intent(MainActivity.this,Terrain.class);
+            Intent intent = new Intent(MainActivity.this,GameActivity.class);
             startActivity(intent);
         });
 
