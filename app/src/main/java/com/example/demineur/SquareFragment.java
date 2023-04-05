@@ -78,7 +78,7 @@ public class SquareFragment extends Fragment{
     }
 
     public void setClickableFalse(){
-        this.binding.imageViewSquare.setClickable(false);
+        this.binding.imageViewSquare.setEnabled(false);
     }
 
     public void setInterface(SquareFragmentInterface xInterface) {

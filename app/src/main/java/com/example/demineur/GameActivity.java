@@ -65,6 +65,14 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         mediaPlayer = MediaPlayer.create(this, R.raw.musique);
         mediaPlayer.setLooping(true);
         mediaPlayer.setVolume(100, 100);
+        binding.buttonRestart.setOnClickListener(view ->{
+            Intent intent = new Intent(GameActivity.this,GameActivity.class);
+            intent.putExtras(bundle2);
+            stopService(intentService);
+            mediaPlayer.stop();
+            finish();
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -73,6 +81,13 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         startService(intentService);
         //TODO Appeler fonction pour mettre à jour le score précédent update();
         mediaPlayer.start();
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        stopService(intentService);
+        mediaPlayer.stop();
     }
 
     @Override
@@ -90,7 +105,6 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
      @Override
     protected void onStop() {
         super.onStop();
-        stopService(intentService);
         mediaPlayer.stop();
         mediaPlayer.release();
     }
