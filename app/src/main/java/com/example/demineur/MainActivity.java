@@ -43,7 +43,14 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intentOptions);
         });
         binding.button3.setOnClickListener(view ->{
-            Intent intent = new Intent(MainActivity.this,GameActivity.class);
+            Intent intent;
+            if (difficulte==Difficulte.FACILE){
+                intent = new Intent(MainActivity.this, GameActivityEasy.class);
+            }else if (difficulte==Difficulte.NORMAL){
+                intent = new Intent(MainActivity.this, GameActivityMedium.class);
+            }else{
+                intent = new Intent(MainActivity.this, GameActivityHard.class);
+            }
             Profil profil =  new Profil(this.nom,this.prenom, this.difficulte,0);
             Bundle bundle2 = new Bundle();
             bundle2.putSerializable("PROFIL",profil);

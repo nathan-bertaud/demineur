@@ -16,9 +16,10 @@
 
         <ImageView
             android:id="@+id/imageViewSquare"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/pixil_frame_0"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="2dp"
+            android:src="@drawable/pixil_frame_0" />
 
     </LinearLayout>
 
