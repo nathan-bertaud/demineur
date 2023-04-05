@@ -190,10 +190,22 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
         return false;
     }
 
+    protected boolean isLost() {
+        for (int i = 0; i < nrow; i++) {
+            for (int j = 0; j < ncol; j++) {
+                if (this.squareTab[i][j].isBomb()&&!this.squareTab[i][j].isUndiscovered()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     public void squareClicked(){
         //ToDo
         System.out.println("Coucou : "+isWon());
+        System.out.println("Coucou : "+isLost());
     }
 
 }
