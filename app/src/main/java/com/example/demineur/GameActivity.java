@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.content.BroadcastReceiver;
@@ -25,6 +26,8 @@ public class GameActivity extends AppCompatActivity {
 
     private ActivityGameBinding binding;
     private Intent intentService;
+
+    private MediaPlayer mediaPlayer;
     static public final String BROADCAST = "timer.projet";
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
@@ -42,6 +45,9 @@ public class GameActivity extends AppCompatActivity {
         tableRow[2]=R.id.tableRow3;
         tableRow[3]=R.id.tableRow4;
         loadFragments();
+        mediaPlayer = MediaPlayer.create(this, R.raw.musique);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.setVolume(100, 100);
     }
 
     @Override
@@ -49,6 +55,7 @@ public class GameActivity extends AppCompatActivity {
         super.onStart();
         startService(intentService);
         //TODO Appeler fonction pour mettre à jour le score précédent update();
+        mediaPlayer.start();
     }
 
     @Override
@@ -81,6 +88,8 @@ public class GameActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         stopService(intentService);
+        mediaPlayer.stop();
+        mediaPlayer.release();
     }
 
     private void sauvegarderScore(){
