@@ -62,21 +62,6 @@ public class GameActivity extends AppCompatActivity implements SquareFragmentInt
     protected void onResume() {
         super.onResume();
         registerReceiver(receiver, new IntentFilter(BROADCAST));
-
-        binding.imageView2.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                //TODO casser une case
-            }
-        });
-
-
-        binding.imageView3.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                //TODO Mettre un drapeau sur la case
-            }
-        });
     }
 
     @Override

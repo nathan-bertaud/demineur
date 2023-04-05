@@ -21,9 +21,10 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         Intent lastIntent = getIntent();
         Bundle bundle = lastIntent.getExtras();
+
         if(bundle  != null){
-            String ativityName = bundle.getString("ActivityName");
-            if(ativityName.equals("Options")){
+            String activityName = bundle.getString("ActivityName");
+            if(activityName.equals("Options")){
                 Profil p = (Profil) bundle.getSerializable("PROFIL");
                 binding.textView5.setText(p.getPrenom());
                 this.prenom = p.getPrenom();
